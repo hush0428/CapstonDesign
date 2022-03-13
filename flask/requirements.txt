@@ -1,0 +1,7 @@
+Flask
+pybase64
+jsonpickle
+pillow
+numpy
+opencv-python
+flask_cors

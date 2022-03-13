@@ -1,0 +1,77 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Deep Learning Web Service
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-label color="primary"><small>Model</small></ion-label>
+      <ion-select value="yolo" (ionChange)="changeModel($event)">
+        <ion-select-option value="yolo">YOLO Detection</ion-select-option>
+        <ion-select-option value="apple">Apple Detection</ion-select-option>
+      </ion-select>
+    </ion-buttons> 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div #pleaseConnect id="please-connect" *ngIf="doSpinner">
+    <p>Please wait ...</p>
+  </div>
+  <div class="video-container">
+    <video *ngIf="showVideo"
+      class="video-area"
+      (canplay)="onVideoCanPlay()"
+      #video autoplay></video>
+    <canvas [hidden]="showVideo" #canvas></canvas>
+  </div>
+  <svg
+    [ngStyle]="{ top: videoBoundingRect.top+'px', left: videoBoundingRect.left+'px'}"
+    [attr.width]="(videoBoundingRect.width)+'px'"
+    [attr.height]="(videoBoundingRect.height)+'px'"
+    [attr.viewBox]=" '0 0 '+videoBoundingRect.width+' '+ videoBoundingRect.height "
+    *ngIf="videoBoundingRect && svgEnabled"
+    class="svg-area"
+    #svgRef
+  >
+    <defs>
+      <filter x="0" y="0" width="1" height="1" id="solid">
+        <feFlood flood-color="black"/>
+        <feComposite in="SourceGraphic" in2="BackgroundImage" operator="atop" result="comp"/>
+      </filter>
+    </defs>
+
+    <g *ngFor="let detection of currentDetections">
+      <rect
+            [attr.x]="detection.bbox[0]+'px'"
+            [attr.y]="detection.bbox[1]+'px'"
+            [attr.width]="detection.bbox[2]+'px'"
+            [attr.height]="detection.bbox[3]+'px'"
+            style="fill: transparent;stroke-width:2;stroke:rgb(0,255,0)"
+      />
+      <text filter="url(#solid)" [attr.x]="detection.bbox[0]+'px'" [attr.y]="detection.bbox[1]+17+'px'" font-family="sans" font-size="18"  fill="white">{{detection.class.name}}, {{detection.confidence | percent:'2.3'}}</text>
+    </g>
+  </svg>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="light">
+        <input
+          (change)="onFileChange($event)" 
+          type="file"
+          name="file"
+          id="file"
+          class="fileInput"
+          accept=".png,.jpg"/>
+        <label for="file"><ion-icon name="images-outline"></ion-icon></label>
+      </ion-fab-button>
+      <ion-fab-button color="light" (click)="capture()">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" (click)="startCamera()">
+        <ion-icon name="videocam-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
