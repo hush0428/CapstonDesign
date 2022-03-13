@@ -32,4 +32,4 @@ npm-debug.log*
 /www
 
 # 직접 제외시킨 파일 #
-/flask/model/yolov3.weights
+#/flask/model/yolov3.weights#
