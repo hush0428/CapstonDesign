@@ -23,7 +23,7 @@ export class HomePage implements OnInit  {
   showVideo = false;
   svgEnabled = true;
   doSpinner = false;
-  apiUrl = 'http://192.168.1.2:5000/';    // api url
+  apiUrl = 'http://localhost:5000/';    // api url
 
   currentDetections;
 
