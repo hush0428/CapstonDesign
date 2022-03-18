@@ -1,3 +1,4 @@
+from pyexpat import model
 from flask import Flask, request, Response, jsonify
 import base64
 from flask_cors import CORS
@@ -14,10 +15,17 @@ CORS(app)
 
 @app.route('/dnn/yolo', methods=['POST'])
 def main():
-    labelsPath="./model/coco.names"
-    configpath="./model/yolov3.cfg"
-    weightspath="./model/yolov3.weights"
-    print("[INFO] loading YOLO models...")
+    model = request.form['model']
+    if model == 'apple':
+        labelsPath="./model/classes.names"
+        configpath="./model/apple-train-yolo.cfg"
+        weightspath="./model/apple-train-yolo_final.weights"
+    else:
+        labelsPath="./model/coco.names"
+        configpath="./model/yolov3.cfg"
+        weightspath="./model/yolov3.weights"
+    
+    print("[INFO] loading ", model.upper(), " models...")
     LABELS = open(labelsPath).read().strip().split("\n")
     net = cv2.dnn.readNetFromDarknet(configpath, weightspath) 
 

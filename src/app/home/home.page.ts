@@ -23,7 +23,7 @@ export class HomePage implements OnInit  {
   showVideo = false;
   svgEnabled = true;
   doSpinner = false;
-  apiUrl = 'http://localhost:5000/';    // api url
+  apiUrl = 'https://capstone-design-22-3-9.df.r.appspot.com';    // api url
 
   currentDetections;
 
@@ -98,6 +98,7 @@ export class HomePage implements OnInit  {
     this.doSpinner = true;
     const formData = new FormData();
     formData.append('image', image);
+    formData.append('model', this.model);
 
     this.http.post(`${this.apiUrl}/dnn/yolo`, formData)
       .subscribe(res => {
